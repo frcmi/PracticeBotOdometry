@@ -24,13 +24,13 @@ public final class Constants {
     public static final int kRightMotor1Port = 1;
     public static final int kRightMotor2Port = 2;
 
-    public static final double kTrackwidthMeters = 0.69; //Need to measure
+    public static final double kTrackwidthMeters = 0.5588; //Need to measure
     public static final DifferentialDriveKinematics kDriveKinematics =
         new DifferentialDriveKinematics(kTrackwidthMeters);
 
     public static final int kEncoderCPR = 2048;
-    public static final double kWheelDiameterMeters = 0.15; //I don't fucking know. Need to measure and calculate
-    public static final double kGearRatio = (double) 11/120; //Change I think
+    public static final double kWheelDiameterMeters = 0.1524; //I don't fucking know. Need to measure and calculate
+    public static final double kGearRatio = (double) 1/6; //Change I think
     public static final double kEncoderDistancePerPulse =
         // Assumes the encoders are directly mounted on the wheel shafts
         (kWheelDiameterMeters * Math.PI) / kEncoderCPR * kGearRatio;
