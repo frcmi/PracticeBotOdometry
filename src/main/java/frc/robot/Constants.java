@@ -17,25 +17,23 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 public final class Constants {
   public static final class DriveConstants {
     //change ports, measurements
-    public static final int kLeftMotor1Port = 0;
-    public static final int kLeftMotor2Port = 1;
-    public static final int kRightMotor1Port = 2;
-    public static final int kRightMotor2Port = 3;
+    public static final int kPigeonPort = 0;
 
-    public static final int[] kLeftEncoderPorts = new int[] {0, 1};
-    public static final int[] kRightEncoderPorts = new int[] {2, 3};
-    public static final boolean kLeftEncoderReversed = false;
-    public static final boolean kRightEncoderReversed = true;
+    public static final int kLeftMotor1Port = 4;
+    public static final int kLeftMotor2Port = 3;
+    public static final int kRightMotor1Port = 1;
+    public static final int kRightMotor2Port = 2;
 
-    public static final double kTrackwidthMeters = 0.69;
+    public static final double kTrackwidthMeters = 0.69; //Need to measure
     public static final DifferentialDriveKinematics kDriveKinematics =
         new DifferentialDriveKinematics(kTrackwidthMeters);
 
-    public static final int kEncoderCPR = 1024;
-    public static final double kWheelDiameterMeters = 0.15;
+    public static final int kEncoderCPR = 2048;
+    public static final double kWheelDiameterMeters = 0.15; //I don't fucking know. Need to measure and calculate
+    public static final double kGearRatio = (double) 11/120; //Change I think
     public static final double kEncoderDistancePerPulse =
         // Assumes the encoders are directly mounted on the wheel shafts
-        (kWheelDiameterMeters * Math.PI) / (double) kEncoderCPR;
+        (kWheelDiameterMeters * Math.PI) / kEncoderCPR * kGearRatio;
 
     // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
     // These characterization values MUST be determined either experimentally or theoretically
