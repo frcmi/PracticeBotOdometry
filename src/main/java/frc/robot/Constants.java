@@ -17,12 +17,12 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 public final class Constants {
   public static final class DriveConstants {
     //change ports, measurements
-    public static final int kPigeonPort = 0;
+    public static final int kPigeonPort = 1;
 
-    public static final int kLeftMotor1Port = 4;
-    public static final int kLeftMotor2Port = 3;
-    public static final int kRightMotor1Port = 1;
-    public static final int kRightMotor2Port = 2;
+    public static final int kLeftMotor1Port = 5;
+    public static final int kLeftMotor2Port = 4;
+    public static final int kRightMotor1Port = 2;
+    public static final int kRightMotor2Port = 3;
 
     public static final double kTrackwidthMeters = 0.5588; //Need to measure
     public static final DifferentialDriveKinematics kDriveKinematics =

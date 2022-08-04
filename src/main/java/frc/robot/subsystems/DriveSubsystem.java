@@ -50,7 +50,7 @@ public class DriveSubsystem extends SubsystemBase {
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
-    m_rightMotors.setInverted(true);
+    m_leftMotors.setInverted(true);
 
     // Sets up the encoders
     front_left.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 20);
@@ -72,11 +72,11 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public double getLeftEncoderDistance() {
-    return ((front_left.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse) + (back_left.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse)) / 2.0;
+    return -((front_left.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse) + (back_left.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse)) / 2.0;
   }
 
   public double getRightEncoderDistance() {
-    return -((front_right.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse) + (back_right.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse)) / 2.0;
+    return ((front_right.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse) + (back_right.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse)) / 2.0;
   }
 
   /**
@@ -94,8 +94,8 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The current wheel speeds.
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds((front_left.getSelectedSensorVelocity() + back_left.getSelectedSensorVelocity()) / 2.0, 
-    (-front_right.getSelectedSensorVelocity() + -back_right.getSelectedSensorVelocity()) / 2.0);
+    return new DifferentialDriveWheelSpeeds((-front_left.getSelectedSensorVelocity() - back_left.getSelectedSensorVelocity()) / 2.0, 
+    (front_right.getSelectedSensorVelocity() + back_right.getSelectedSensorVelocity()) / 2.0);
   }
 
   /**
