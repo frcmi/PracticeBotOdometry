@@ -47,14 +47,14 @@ public class RobotContainer {
 
     // Configure default commands
     // Set the default drive command to split-stick arcade drive
-    m_robotDrive.setDefaultCommand(
+    /*m_robotDrive.setDefaultCommand(
         // A split-stick arcade command, with forward/backward controlled by the left
         // hand, and turning controlled by the right.
         new RunCommand(
             () ->
                 m_robotDrive.arcadeDrive(
                     -m_driverController.getLeftY(), m_driverController.getRightX()),
-            m_robotDrive));
+            m_robotDrive));*/
   }
 
   /**
@@ -65,9 +65,9 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Drive at half speed when the right bumper is held
-    new JoystickButton(m_driverController, Button.kRightBumper.value)
+   /* new JoystickButton(m_driverController, Button.kRightBumper.value)
         .whenPressed(() -> m_robotDrive.setMaxOutput(0.5))
-        .whenReleased(() -> m_robotDrive.setMaxOutput(1));
+        .whenReleased(() -> m_robotDrive.setMaxOutput(1));*/
   }
 
   /**
@@ -84,7 +84,7 @@ public class RobotContainer {
                 DriveConstants.kvVoltSecondsPerMeter,
                 DriveConstants.kaVoltSecondsSquaredPerMeter),
             DriveConstants.kDriveKinematics,
-            10);
+            11);
 
     // Create config for trajectory
     TrajectoryConfig config =
@@ -101,10 +101,10 @@ public class RobotContainer {
         TrajectoryGenerator.generateTrajectory(
             // Start at the origin facing the +X direction
             new Pose2d(0, 0, new Rotation2d(0)),
-            // Pass through these 4 interior waypoints, making a figure eight
-            List.of(new Translation2d(1, 1), new Translation2d(2, -1), new Translation2d(2, 1), new Translation2d(1, -1)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(new Translation2d(1, -1), new Translation2d(2, 1)), //new Translation2d(2, 1), new Translation2d(1, -1)
             // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(0, 0, new Rotation2d(0)),
+            new Pose2d(3, 0, new Rotation2d(0)),
             // Pass config
             config);
 

@@ -24,13 +24,13 @@ public final class Constants {
     public static final int kRightMotor1Port = 2;
     public static final int kRightMotor2Port = 3;
 
-    public static final double kTrackwidthMeters = 0.5588; //Need to measure
+    public static final double kTrackwidthMeters = 0.62898; //Need to measure
     public static final DifferentialDriveKinematics kDriveKinematics =
         new DifferentialDriveKinematics(kTrackwidthMeters);
 
     public static final int kEncoderCPR = 2048;
     public static final double kWheelDiameterMeters = 0.1524; //I don't fucking know. Need to measure and calculate
-    public static final double kGearRatio = (double) 1/6; //Change I think
+    public static final double kGearRatio = (double) 128/11; //Change I think
     public static final double kEncoderDistancePerPulse =
         // Assumes the encoders are directly mounted on the wheel shafts
         (kWheelDiameterMeters * Math.PI) / kEncoderCPR * kGearRatio;
@@ -40,12 +40,12 @@ public final class Constants {
     // for *your* robot's drive.
     // The Robot Characterization Toolsuite provides a convenient tool for obtaining these
     // values for your robot.
-    public static final double ksVolts = 0.22;
-    public static final double kvVoltSecondsPerMeter = 1.98;
-    public static final double kaVoltSecondsSquaredPerMeter = 0.2;
+    public static final double ksVolts = 0.91351;
+    public static final double kvVoltSecondsPerMeter = 2.5447;
+    public static final double kaVoltSecondsSquaredPerMeter = 0.47201;
 
     // Example value only - as above, this must be tuned for your drive!
-    public static final double kPDriveVel = 8.5;
+    public static final double kPDriveVel = 3.7728;
   }
 
   public static final class OIConstants {
@@ -54,7 +54,7 @@ public final class Constants {
 
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 3;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 1;
 
     // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
     public static final double kRamseteB = 2;

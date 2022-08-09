@@ -20,19 +20,17 @@ import com.ctre.phoenix.sensors.WPI_Pigeon2;
 public class DriveSubsystem extends SubsystemBase {
   // The motors on the left side of the drive.
   WPI_TalonFX front_left = new WPI_TalonFX(DriveConstants.kLeftMotor1Port);
-  WPI_TalonFX back_left = new WPI_TalonFX(DriveConstants.kLeftMotor2Port);
+  //WPI_TalonFX back_left = new WPI_TalonFX(DriveConstants.kLeftMotor2Port);
   private final MotorControllerGroup m_leftMotors =
       new MotorControllerGroup(
-          front_left,
-          back_left);
+          front_left);
 
   // The motors on the right side of the drive.
   WPI_TalonFX front_right = new WPI_TalonFX(DriveConstants.kRightMotor1Port);
-  WPI_TalonFX back_right = new WPI_TalonFX(DriveConstants.kRightMotor2Port);
+  //WPI_TalonFX back_right = new WPI_TalonFX(DriveConstants.kRightMotor2Port);
   private final MotorControllerGroup m_rightMotors =
       new MotorControllerGroup(
-          front_right,
-          back_right);
+          front_right);
 
   // The robot's drive
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
@@ -54,11 +52,12 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Sets up the encoders
     front_left.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 20);
-    back_left.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 20);
+    //back_left.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 20);
     front_right.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 20);
-    back_right.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 20);
+    //back_right.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 20);
 
     resetEncoders();
+    zeroHeading();
     m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
   }
 
@@ -72,11 +71,11 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public double getLeftEncoderDistance() {
-    return -((front_left.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse) + (back_left.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse)) / 2.0;
+    return -((front_left.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse));
   }
 
   public double getRightEncoderDistance() {
-    return ((front_right.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse) + (back_right.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse)) / 2.0;
+    return ((front_right.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse)) ;
   }
 
   /**
@@ -94,8 +93,8 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The current wheel speeds.
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds((-front_left.getSelectedSensorVelocity() - back_left.getSelectedSensorVelocity()) / 2.0, 
-    (front_right.getSelectedSensorVelocity() + back_right.getSelectedSensorVelocity()) / 2.0);
+    return new DifferentialDriveWheelSpeeds(Math.abs((front_left.getSelectedSensorVelocity())), 
+    (front_right.getSelectedSensorVelocity()));
   }
 
   /**
@@ -133,9 +132,9 @@ public class DriveSubsystem extends SubsystemBase {
   /** Resets the drive encoders to currently read a position of 0. */
   public void resetEncoders() {
    front_left.setSelectedSensorPosition(0.0);
-   back_left.setSelectedSensorPosition(0.0);
+   //back_left.setSelectedSensorPosition(0.0);
    front_right.setSelectedSensorPosition(0.0);
-   back_right.setSelectedSensorPosition(0.0);
+   //back_right.setSelectedSensorPosition(0.0);
   }
 
   /**
@@ -144,7 +143,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the average of the two encoder readings
    */
   public double getAverageEncoderDistance() {
-    return (getLeftEncoderDistance()) + (getRightEncoderDistance()) / 2.0;
+    return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2.0;
   }
 
   /** CAN'T RETURN AN ENCODER BECAUSE FALCONS DON'T LET YOU
@@ -194,6 +193,6 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The turn rate of the robot, in degrees per second
    */
   public double getTurnRate() {
-    return -m_gyro.getRate();
+    return m_gyro.getRate();
   }
 }
