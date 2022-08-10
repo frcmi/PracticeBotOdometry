@@ -13,21 +13,22 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 public class DriveSubsystem extends SubsystemBase {
   // The motors on the left side of the drive.
-  WPI_TalonFX front_left = new WPI_TalonFX(DriveConstants.kLeftMotor1Port);
-  //WPI_TalonFX back_left = new WPI_TalonFX(DriveConstants.kLeftMotor2Port);
+  WPI_TalonFX front_left = new WPI_TalonFX(DriveConstants.kLeftMotorFrontPort);
+  WPI_TalonFX back_left = new WPI_TalonFX(DriveConstants.kLeftMotorBackPort);
   private final MotorControllerGroup m_leftMotors =
       new MotorControllerGroup(
           front_left);
 
   // The motors on the right side of the drive.
-  WPI_TalonFX front_right = new WPI_TalonFX(DriveConstants.kRightMotor1Port);
-  //WPI_TalonFX back_right = new WPI_TalonFX(DriveConstants.kRightMotor2Port);
+  WPI_TalonFX front_right = new WPI_TalonFX(DriveConstants.kRightMotorFrontPort);
+  WPI_TalonFX back_right = new WPI_TalonFX(DriveConstants.kRightMotorBackPort);
   private final MotorControllerGroup m_rightMotors =
       new MotorControllerGroup(
           front_right);
@@ -45,11 +46,20 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+    front_left.configFactoryDefault();
+    back_left.configFactoryDefault();
+    front_right.configFactoryDefault();
+    back_right.configFactoryDefault();
+
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     m_leftMotors.setInverted(true);
 
+    back_left.follow(front_left);
+    back_left.setInverted(InvertType.FollowMaster);
+    back_right.follow(front_right);
+    back_right.setInverted(InvertType.FollowMaster);
     // Sets up the encoders
     front_left.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 20);
     //back_left.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 20);
@@ -68,14 +78,18 @@ public class DriveSubsystem extends SubsystemBase {
         m_gyro.getRotation2d(), 
         getLeftEncoderDistance(), 
         getRightEncoderDistance());
+    System.out.println("gyro angle: " + m_gyro.getAngle());
+    System.out.println("left side distance in m: " + getLeftEncoderDistance());
+    System.out.println("right side distance in m: " + getRightEncoderDistance());
+
   }
 
   public double getLeftEncoderDistance() {
-    return -((front_left.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse));
+    return Math.abs((front_left.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse));
   }
 
   public double getRightEncoderDistance() {
-    return ((front_right.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse)) ;
+    return Math.abs((front_right.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse)) ;
   }
 
   /**
@@ -92,9 +106,9 @@ public class DriveSubsystem extends SubsystemBase {
    *
    * @return The current wheel speeds.
    */
-  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(Math.abs((front_left.getSelectedSensorVelocity())), 
-    (front_right.getSelectedSensorVelocity()));
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() { //in m/s
+    return new DifferentialDriveWheelSpeeds(Math.abs((front_left.getSelectedSensorVelocity() * DriveConstants.kEncoderDistancePerPulse * 1000)), 
+    Math.abs(front_right.getSelectedSensorVelocity()* DriveConstants.kEncoderDistancePerPulse * 1000));
   }
 
   /**

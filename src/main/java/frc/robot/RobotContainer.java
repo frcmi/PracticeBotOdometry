@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import static edu.wpi.first.wpilibj.XboxController.Button;
+//import static edu.wpi.first.wpilibj.XboxController.Button;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
@@ -84,7 +84,7 @@ public class RobotContainer {
                 DriveConstants.kvVoltSecondsPerMeter,
                 DriveConstants.kaVoltSecondsSquaredPerMeter),
             DriveConstants.kDriveKinematics,
-            11);
+            10);
 
     // Create config for trajectory
     TrajectoryConfig config =
