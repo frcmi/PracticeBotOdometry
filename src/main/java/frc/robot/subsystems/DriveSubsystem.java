@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
@@ -20,17 +22,13 @@ import com.ctre.phoenix.sensors.WPI_Pigeon2;
 public class DriveSubsystem extends SubsystemBase {
   // The motors on the left side of the drive.
   WPI_TalonFX front_left = new WPI_TalonFX(DriveConstants.kLeftMotor1Port);
-  //WPI_TalonFX back_left = new WPI_TalonFX(DriveConstants.kLeftMotor2Port);
-  private final MotorControllerGroup m_leftMotors =
-      new MotorControllerGroup(
-          front_left);
+  WPI_TalonFX back_left = new WPI_TalonFX(DriveConstants.kLeftMotor2Port);
+  private final MotorControllerGroup m_leftMotors = new MotorControllerGroup(front_left, back_left);
 
   // The motors on the right side of the drive.
   WPI_TalonFX front_right = new WPI_TalonFX(DriveConstants.kRightMotor1Port);
-  //WPI_TalonFX back_right = new WPI_TalonFX(DriveConstants.kRightMotor2Port);
-  private final MotorControllerGroup m_rightMotors =
-      new MotorControllerGroup(
-          front_right);
+  WPI_TalonFX back_right = new WPI_TalonFX(DriveConstants.kRightMotor2Port);
+  private final MotorControllerGroup m_rightMotors = new MotorControllerGroup(front_right, back_right);
 
   // The robot's drive
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
@@ -43,18 +41,23 @@ public class DriveSubsystem extends SubsystemBase {
   // Odometry class for tracking robot pose
   private final DifferentialDriveOdometry m_odometry;
 
+  //Field2d Sim
+  private final Field2d m_field = new Field2d();
+
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     m_leftMotors.setInverted(true);
+    SmartDashboard.putData("Field", m_field);
 
     // Sets up the encoders
     front_left.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 20);
-    //back_left.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 20);
+    back_left.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 20);
     front_right.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 20);
-    //back_right.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 20);
+    back_right.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 20);
 
     resetEncoders();
     zeroHeading();
@@ -68,6 +71,8 @@ public class DriveSubsystem extends SubsystemBase {
         m_gyro.getRotation2d(), 
         getLeftEncoderDistance(), 
         getRightEncoderDistance());
+
+    m_field.setRobotPose(m_odometry.getPoseMeters());
   }
 
   public double getLeftEncoderDistance() {
@@ -132,9 +137,9 @@ public class DriveSubsystem extends SubsystemBase {
   /** Resets the drive encoders to currently read a position of 0. */
   public void resetEncoders() {
    front_left.setSelectedSensorPosition(0.0);
-   //back_left.setSelectedSensorPosition(0.0);
+   back_left.setSelectedSensorPosition(0.0);
    front_right.setSelectedSensorPosition(0.0);
-   //back_right.setSelectedSensorPosition(0.0);
+   back_right.setSelectedSensorPosition(0.0);
   }
 
   /**
