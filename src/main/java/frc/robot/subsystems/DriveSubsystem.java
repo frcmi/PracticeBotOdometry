@@ -20,15 +20,15 @@ import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 public class DriveSubsystem extends SubsystemBase {
   // The motors on the left side of the drive.
-  WPI_TalonFX front_left = new WPI_TalonFX(DriveConstants.kLeftMotorFrontPort);
-  WPI_TalonFX back_left = new WPI_TalonFX(DriveConstants.kLeftMotorBackPort);
+  WPI_TalonFX front_left = new WPI_TalonFX(DriveConstants.kLeftMotor1Port);
+  WPI_TalonFX back_left = new WPI_TalonFX(DriveConstants.kLeftMotor2Port);
   private final MotorControllerGroup m_leftMotors =
       new MotorControllerGroup(
           front_left);
 
   // The motors on the right side of the drive.
-  WPI_TalonFX front_right = new WPI_TalonFX(DriveConstants.kRightMotorFrontPort);
-  WPI_TalonFX back_right = new WPI_TalonFX(DriveConstants.kRightMotorBackPort);
+  WPI_TalonFX front_right = new WPI_TalonFX(DriveConstants.kRightMotor1Port);
+  WPI_TalonFX back_right = new WPI_TalonFX(DriveConstants.kRightMotor2Port);
   private final MotorControllerGroup m_rightMotors =
       new MotorControllerGroup(
           front_right);
