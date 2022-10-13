@@ -19,6 +19,9 @@ import frc.robot.subsystems.DriveSubsystem;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
+  private long lastTellop;
+  private double accelerationMultipyer; 
+
   private RobotContainer m_robotContainer;
 
   /**
@@ -89,13 +92,27 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    //Gets called everytime Tellop is 
+    lastTellop = System.getTimeInMillis();
+
   }
 
   /** This function is called periodically during operator control. */
   @Override
+  
+
   public void teleopPeriodic() {
-    double fwd = -m_robotContainer.m_driverController.getLeftY() * 0.5;
+
+    //Acceleration Curve code 
+    //gives us the time since last tellop
+    dt = Stystem.getTimeInMillies() - lastTellop;
+    accelerationMultipyer = 0.6 * dt; 
+
+    double fwd = -m_robotContainer.m_driverController.getLeftY() * accelerationMultipyer;
     double rot = -m_robotContainer.m_driverController.getRightX() * 0.5;
+
+
 
     m_robotContainer.m_robotDrive.arcadeDrive(fwd, rot);
   }
