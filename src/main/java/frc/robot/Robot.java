@@ -97,7 +97,7 @@ public class Robot extends TimedRobot {
     double fwd = -m_robotContainer.m_driverController.getLeftY() * 0.5;
     double rot = -m_robotContainer.m_driverController.getRightX() * 0.5;
 
-    m_robotContainer.m_robotDrive.arcadeDrive(yAxis, xAxis);
+    m_robotContainer.m_robotDrive.arcadeDrive(fwd, rot);
   }
 
   @Override
