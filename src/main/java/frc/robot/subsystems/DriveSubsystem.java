@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
@@ -47,12 +48,21 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+    front_left.configFactoryDefault();
+    back_left.configFactoryDefault();
+    front_right.configFactoryDefault();
+    back_right.configFactoryDefault();
+
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     m_leftMotors.setInverted(true);
     SmartDashboard.putData("Field", m_field);
 
+    back_left.follow(front_left);
+    back_left.setInverted(InvertType.FollowMaster);
+    back_right.follow(front_right);
+    back_right.setInverted(InvertType.FollowMaster);
     // Sets up the encoders
     front_left.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 20);
     back_left.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 20);
@@ -76,11 +86,11 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public double getLeftEncoderDistance() {
-    return -((front_left.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse));
+    return Math.abs((front_left.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse));
   }
 
   public double getRightEncoderDistance() {
-    return ((front_right.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse)) ;
+    return Math.abs((front_right.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse)) ;
   }
 
   /**
@@ -97,9 +107,9 @@ public class DriveSubsystem extends SubsystemBase {
    *
    * @return The current wheel speeds.
    */
-  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(Math.abs((front_left.getSelectedSensorVelocity())), 
-    (front_right.getSelectedSensorVelocity()));
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() { //in m/s
+    return new DifferentialDriveWheelSpeeds(Math.abs((front_left.getSelectedSensorVelocity() * DriveConstants.kEncoderDistancePerPulse * 1000)), 
+    Math.abs(front_right.getSelectedSensorVelocity()* DriveConstants.kEncoderDistancePerPulse * 1000));
   }
 
   /**
