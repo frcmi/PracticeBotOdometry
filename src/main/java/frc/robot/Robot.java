@@ -20,7 +20,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private long lastTellop;
-  private double accelerationMultipyer; 
+  private double accelerationMultipyer;  
 
   private RobotContainer m_robotContainer;
 
@@ -103,11 +103,13 @@ public class Robot extends TimedRobot {
   
 
   public void teleopPeriodic() {
+    private double deltaTime;
 
     //Acceleration Curve code 
     //gives us the time since last tellop
     dt = Stystem.getTimeInMillies() - lastTellop;
-    accelerationMultipyer = 0.6 * dt; 
+    accelerationMultipyer *= 0.6 * deltaTime; 
+    lastTellop = System.getTimeInMillies(); 
 
     double fwd = -m_robotContainer.m_driverController.getLeftY() * accelerationMultipyer;
     double rot = -m_robotContainer.m_driverController.getRightX() * 0.5;
