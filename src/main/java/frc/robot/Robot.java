@@ -94,7 +94,7 @@ public class Robot extends TimedRobot {
     }
 
     //Gets called everytime Tellop is 
-    lastTellop = System.getTimeInMillis();
+    lastTellop = System.currentTimeMillis();
 
   }
 
@@ -103,13 +103,13 @@ public class Robot extends TimedRobot {
   
 
   public void teleopPeriodic() {
-    private double deltaTime;
+    double deltaTime;
 
     //Acceleration Curve code 
     //gives us the time since last tellop
-    dt = Stystem.getTimeInMillies() - lastTellop;
+    deltaTime = System.currentTimeMillis() - lastTellop;
     accelerationMultipyer *= 0.6 * deltaTime; 
-    lastTellop = System.getTimeInMillies(); 
+    lastTellop = System.currentTimeMillis(); 
 
     double fwd = -m_robotContainer.m_driverController.getLeftY() * accelerationMultipyer;
     double rot = -m_robotContainer.m_driverController.getRightX() * 0.5;
