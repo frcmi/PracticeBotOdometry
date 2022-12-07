@@ -60,4 +60,16 @@ public final class Constants {
     public static final double kRamseteB = 2;
     public static final double kRamseteZeta = 0.7;
   }
+  
+  public static final class Pneumatics {
+        //ids for compressors and solenoids
+        public static final int extendSolenoidPortLeft = 0;
+        public static final int retractSolenoidPortLeft = 1;
+        public static final int extendSolenoidPortRight = 2;
+        public static final int retractSolenoidPortRight = 3;
+    
+        //movement constants
+        public static final double extendSpeed = 0.1;
+        public static final double retractSpeed = 0.1;
+  }
 }

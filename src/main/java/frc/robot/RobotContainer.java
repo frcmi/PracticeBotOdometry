@@ -23,7 +23,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ExtendPneumatic;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.PneumaticsSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -39,6 +41,7 @@ import java.util.List;
 public class RobotContainer {
   // The robot's subsystems
   public final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  public final PneumaticsSubsystem m_robotPneumatic = new PneumaticsSubsystem();
 
   // The driver's controller
   public final XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -48,6 +51,7 @@ public class RobotContainer {
     DriverStation.silenceJoystickConnectionWarning(true);
     // Configure the button bindings
     configureButtonBindings();
+    m_robotPneumatic.setDefaultCommand(new ExtendPneumatic(m_robotPneumatic, m_driverController));
 
     // Configure default commands
     // Set the default drive command to split-stick arcade drive
