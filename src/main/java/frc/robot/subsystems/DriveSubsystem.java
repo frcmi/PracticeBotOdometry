@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.robot.Robot;
 import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -34,7 +35,6 @@ public class DriveSubsystem extends SubsystemBase {
   // The robot's drive
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
 
-
   // The gyro sensor (Pigeon 2)
   private final WPI_Pigeon2 pigeon = new WPI_Pigeon2(DriveConstants.kPigeonPort);
   private final Gyro m_gyro = pigeon;
@@ -42,9 +42,11 @@ public class DriveSubsystem extends SubsystemBase {
   // Odometry class for tracking robot pose
   private final DifferentialDriveOdometry m_odometry;
 
-  //Field2d Sim
+  // Field2d Sim
   private final Field2d m_field = new Field2d();
 
+  // private DrivebaseSim driveSim = new DrivebaseSim(front_left, front_right,
+  // pigeon);
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -78,11 +80,16 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() {
     // Update the odometry in the periodic block
     m_odometry.update(
-        m_gyro.getRotation2d(), 
-        getLeftEncoderDistance(), 
+        m_gyro.getRotation2d(),
+        getLeftEncoderDistance(),
         getRightEncoderDistance());
 
     m_field.setRobotPose(m_odometry.getPoseMeters());
+
+    Pose2d pose = m_field.getRobotPose();
+    double[] pose_arr = { pose.getX(), pose.getY() };
+
+    SmartDashboard.putNumberArray("Pose", pose_arr);
   }
 
   public double getLeftEncoderDistance() {
@@ -90,7 +97,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public double getRightEncoderDistance() {
-    return Math.abs((front_right.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse)) ;
+    return Math.abs((front_right.getSelectedSensorPosition() * DriveConstants.kEncoderDistancePerPulse));
   }
 
   /**
@@ -107,9 +114,14 @@ public class DriveSubsystem extends SubsystemBase {
    *
    * @return The current wheel speeds.
    */
-  public DifferentialDriveWheelSpeeds getWheelSpeeds() { //in m/s
-    return new DifferentialDriveWheelSpeeds(Math.abs((front_left.getSelectedSensorVelocity() * DriveConstants.kEncoderDistancePerPulse * 1000)), 
-    Math.abs(front_right.getSelectedSensorVelocity()* DriveConstants.kEncoderDistancePerPulse * 1000));
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() { // in m/s
+    double mult = DriveConstants.speedMultiplier;
+    if (Robot.isSimulation()) {
+      mult /= 10;
+    }
+    return new DifferentialDriveWheelSpeeds(
+        Math.abs((front_left.getSelectedSensorVelocity() * DriveConstants.kEncoderDistancePerPulse * 1000) * mult),
+        Math.abs(front_right.getSelectedSensorVelocity() * DriveConstants.kEncoderDistancePerPulse * 1000) * mult);
   }
 
   /**
@@ -129,13 +141,17 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rot the commanded rotation
    */
   public void arcadeDrive(double fwd, double rot) {
-    m_drive.arcadeDrive(fwd, rot);
+    double mult = DriveConstants.speedMultiplier;
+    if (Robot.isSimulation()) {
+      mult /= 3;
+    }
+    m_drive.arcadeDrive(fwd * mult, rot * mult);
   }
 
   /**
    * Controls the left and right sides of the drive directly with voltages.
    *
-   * @param leftVolts the commanded left output
+   * @param leftVolts  the commanded left output
    * @param rightVolts the commanded right output
    */
   public void tankDriveVolts(double leftVolts, double rightVolts) {
@@ -146,10 +162,10 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Resets the drive encoders to currently read a position of 0. */
   public void resetEncoders() {
-   front_left.setSelectedSensorPosition(0.0);
-   back_left.setSelectedSensorPosition(0.0);
-   front_right.setSelectedSensorPosition(0.0);
-   back_right.setSelectedSensorPosition(0.0);
+    front_left.setSelectedSensorPosition(0.0);
+    back_left.setSelectedSensorPosition(0.0);
+    front_right.setSelectedSensorPosition(0.0);
+    back_right.setSelectedSensorPosition(0.0);
   }
 
   /**
@@ -161,26 +177,32 @@ public class DriveSubsystem extends SubsystemBase {
     return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2.0;
   }
 
-  /** CAN'T RETURN AN ENCODER BECAUSE FALCONS DON'T LET YOU
+  /**
+   * CAN'T RETURN AN ENCODER BECAUSE FALCONS DON'T LET YOU
    * Gets the left drive encoder.
    *
    * @return the left drive encoder
    */
-  /*public Encoder getLeftEncoder() {
-    return null;
-  }*/
+  /*
+   * public Encoder getLeftEncoder() {
+   * return null;
+   * }
+   */
 
   /**
    * Gets the right drive encoder.
    *
    * @return the right drive encoder
    */
-  /*public Encoder getRightEncoder() {
-    return null;
-  }*/
+  /*
+   * public Encoder getRightEncoder() {
+   * return null;
+   * }
+   */
 
   /**
-   * Sets the max output of the drive. Useful for scaling the drive to drive more slowly.
+   * Sets the max output of the drive. Useful for scaling the drive to drive more
+   * slowly.
    *
    * @param maxOutput the maximum output to which the drive will be constrained
    */
@@ -209,5 +231,10 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public double getTurnRate() {
     return m_gyro.getRate();
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    // driveSim.run();
   }
 }
