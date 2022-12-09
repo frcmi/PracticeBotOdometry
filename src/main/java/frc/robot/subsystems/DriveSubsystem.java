@@ -49,7 +49,7 @@ public class DriveSubsystem extends SubsystemBase {
   private double y_Displacement = 0.0; 
   private double x_Displacement = 0.0; 
   private final double two = 2.0; 
-
+  private String i_j_Displacement = ""; 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     front_left.configFactoryDefault();
@@ -90,11 +90,13 @@ public class DriveSubsystem extends SubsystemBase {
 
     x_Displacement = m_odometry.getPoseMeters().getX(); 
     y_Displacement = m_odometry.getPoseMeters().getY(); 
-    SmartDashboard.putNumber("X-Displacement", x_Displacement);
-    SmartDashboard.putNumber("Y-Displacement", y_Displacement);
+    i_j_Displacement = x_Displacement + "i + " + y_Displacement + "j"; 
+   
+    SmartDashboard.putString("Polar Displacement", "[" + Math.sqrt(Math.pow(x_Displacement, 
+    2) + Math.pow(y_Displacement, two)) + " " 
+    + Math.atan(y_Displacement/x_Displacement) + "]");
 
-    SmartDashboard.putNumber("Displacement", Math.sqrt(Math.pow(x_Displacement, 
-    2) + Math.pow(y_Displacement, two)));
+    SmartDashboard.putString("Rectangular Displacement", i_j_Displacement);
 
   }
 
