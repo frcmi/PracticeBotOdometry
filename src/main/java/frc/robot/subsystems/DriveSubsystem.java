@@ -45,6 +45,10 @@ public class DriveSubsystem extends SubsystemBase {
   //Field2d Sim
   private final Field2d m_field = new Field2d();
 
+  //Some smartdashboard variables
+  private double y_Displacement = 0.0; 
+  private double x_Displacement = 0.0; 
+  private final double two = 2.0; 
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -71,7 +75,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     resetEncoders();
     zeroHeading();
-    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
+    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d()); 
   }
 
   @Override
@@ -83,6 +87,15 @@ public class DriveSubsystem extends SubsystemBase {
         getRightEncoderDistance());
 
     m_field.setRobotPose(m_odometry.getPoseMeters());
+
+    x_Displacement = m_odometry.getPoseMeters().getX(); 
+    y_Displacement = m_odometry.getPoseMeters().getY(); 
+    SmartDashboard.putNumber("X-Displacement", x_Displacement);
+    SmartDashboard.putNumber("Y-Displacement", y_Displacement);
+
+    SmartDashboard.putNumber("Displacement", Math.sqrt(Math.pow(x_Displacement, 
+    2) + Math.pow(y_Displacement, two)));
+
   }
 
   public double getLeftEncoderDistance() {
