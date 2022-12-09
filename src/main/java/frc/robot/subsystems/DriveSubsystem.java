@@ -20,6 +20,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
+
 public class DriveSubsystem extends SubsystemBase {
   // The motors on the left side of the drive.
   WPI_TalonFX front_left = new WPI_TalonFX(DriveConstants.kLeftMotor1Port);
@@ -77,12 +78,17 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
+
+
     m_odometry.update(
         m_gyro.getRotation2d(), 
         getLeftEncoderDistance(), 
         getRightEncoderDistance());
 
     m_field.setRobotPose(m_odometry.getPoseMeters());
+    SmartDashboard.putNumber("Distance X", m_field.getRobotPose().getX());
+    SmartDashboard.putNumber("Distance Y", m_field.getRobotPose().getY());
+
   }
 
   public double getLeftEncoderDistance() {
