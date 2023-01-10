@@ -18,6 +18,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
@@ -30,6 +31,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 import java.util.List;
 
 /**
@@ -51,7 +54,7 @@ public class RobotContainer {
     DriverStation.silenceJoystickConnectionWarning(true);
     // Configure the button bindings
     configureButtonBindings();
-    m_robotPneumatic.setDefaultCommand(new ExtendPneumatic(m_robotPneumatic, m_driverController));
+    // m_robotPneumatic.setDefaultCommand(new ExtendPneumatic(m_robotPneumatic, m_driverController));s
 
     // Configure default commands
     // Set the default drive command to split-stick arcade drive
@@ -73,9 +76,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Drive at half speed when the right bumper is held
-   /* new JoystickButton(m_driverController, Button.kRightBumper.value)
-        .whenPressed(() -> m_robotDrive.setMaxOutput(0.5))
-        .whenReleased(() -> m_robotDrive.setMaxOutput(1));*/
+    new JoystickButton(m_driverController, Button.kRightBumper.value)
+        .whenPressed(() -> m_robotPneumatic.extendPiston());
+    new JoystickButton(m_driverController, Button.kLeftBumper.value)
+        .whenPressed(() -> m_robotPneumatic.reversePiston());
   }
 
   /**
